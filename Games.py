@@ -5,11 +5,28 @@ import numpy as np
 from collections import Counter
 
 
+class Game:
+    def __init__(self, deck, players, viewer):
+        self.deck = deck
+        self.players = players
+        self.viewer = viewer
+
+    def play_turn(self):
+        """
+        :return: True if game is finished
+        """
+        return True
+
+    def cleanup(self):
+        return self.deck
+
+
 class War:
     """
     Game "War"
     Rules:
     """
+
     def __init__(self, deck, players_count=2):
         self.weights = {}
         for card_type_counter in range(len(Cards.cards_normal)):
@@ -66,3 +83,43 @@ class War:
         if not_empty_counet > 1:
             return True
         return False
+
+
+class Makao(Game):
+    def __init__(self, players, viewer, jokers=0):
+        """
+        Game is played with same deck with different number of Jokers
+        
+        :param players: list of Player objects
+        :param viewer:  viewer object od the Game
+        :param jokers:  number of Jokers to be put
+        """
+        deck = Cards.Deck(joker_count=jokers)
+        super().__init__(deck, players, viewer)
+        self.deck.shuffle()
+        self.hands = []
+        self.pile = []
+        for player in players:
+            hand = []
+            for i in range(5):
+                hand.append(self.deck.deck_list.pop())
+            self.hands.append(hand)
+        while True:
+            self.pile.append(self.deck.deck_list.pop())
+            if self.pile[0].type in ["5", "6", "7", "8", "9", "10"]:
+                break
+            self.deck.put_at_bottom(self.pile.pop())
+
+    def play_turn(self):
+        """
+        play single turn of the game for all players
+
+        :return: True if game is finished, False otherwise
+        """
+        for i in range(len(self.players)):
+            pile_top = self.pile[-1]
+
+        for hand in self.hands:
+            if len(hand) != 0:
+                return False
+        return True

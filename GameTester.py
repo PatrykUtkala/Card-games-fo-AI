@@ -32,4 +32,5 @@ def check_war():
     war = Games.War(D)
     war.play_game()
 
+
 check_war()
